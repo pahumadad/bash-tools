@@ -21,42 +21,90 @@ build_flower() {
     check_command $? "Build Flower"
 }
 
+check_running() {
+    CONTAINER=$(bash docker_tools.sh -c $1)
+    if [ ! -z "$CONTAINER" ]; then
+        RUNNING=$(bash docker_tools.sh -r $CONTAINER)
+        if [ "$RUNNING" == "true" ]; then
+            echo "> $1 container is running"
+        elif [ "$RUNNING" == "false" ]; then
+            docker rm -f $FLOWER_NAME
+        fi
+    else
+        echo $1
+    fi
+}
+
 start_rabbitmq() {
-    RABBIT_NAME=$1
-    echo "> Launching RabbitMQ"
+    STATE=$(check_running $RABBIT_NAME)
+    if [ "$STATE" != "$RABBIT_NAME" ]; then
+        echo $STATE
+    else
+        echo "> Launching RabbitMQ"
 
-    docker run -d \
-        --hostname rabbit_host \
-        --name rabbit_host \
-        -e RABBITMQ_DEFAULT_USER=guest \
-        -e RABBITMQ_DEFAULT_PASS=guest \
-        -p 5672:5672 \
-        -p 15672:15672 \
-        rabbitmq:management
+        docker run -d \
+            --hostname rabbit_host \
+            --name rabbit_host \
+            -e RABBITMQ_DEFAULT_USER=guest \
+            -e RABBITMQ_DEFAULT_PASS=guest \
+            -p 5672:5672 \
+            -p 15672:15672 \
+            rabbitmq:management
 
-    check_command $? "RabbitMQ"
+        check_command $? "RabbitMQ"
+    fi
 }
 
 start_flower() {
-    RABBIT_NAME=$1
-    FLOWER_NAME=$2
-
-    IMAGE=$(docker images | grep $FLOWER_NAME)
-    echo "---Image: "$IMAGE
+    IMAGE=$(bash docker_tools.sh -i $FLOWER_NAME)
     if [ -z "$IMAGE" ]; then
         echo "> No Flower docker image found... building it"
         build_flower
     fi
-    echo "> Launching Flower"
 
-    docker run -d \
-        --name $FLOWER_NAME \
-        --link $RABBIT_NAME \
-        -p 5555:5555 \
-        $FLOWER_NAME
+    STATE=$(check_running $FLOWER_NAME)
+    if [ "$STATE" != "$FLOWER_NAME" ]; then
+        echo $STATE
+    else
+        echo "> Launching Flower"
 
-    check_command $? "Flower"
+        docker run -d \
+            --name $FLOWER_NAME \
+            --link $RABBIT_NAME \
+            -p 5555:5555 \
+            $FLOWER_NAME
+
+        check_command $? "Flower"
+    fi
 }
 
-start_rabbitmq $RABBIT_NAME
-start_flower $RABBIT_NAME $FLOWER_NAME
+stop_containers() {
+    for NAME in $FLOWER_NAME $RABBIT_NAME; do
+        check_running $NAME
+        if [ "$STATE" != "$NAME" ]; then
+            docker rm -f $NAME
+        fi
+    done
+}
+
+help() {
+    echo "usage:\t[--start]\tstart RabbitMQ and Flower services"
+    echo "$fakes\t[--stop]\tstop and delete containers"
+}
+
+case "$1" in
+    --start)
+        start_rabbitmq
+        start_flower
+        ;;
+    --stop)
+        stop_containers
+        ;;
+    --restart)
+        stop_containers
+        start_rabbitmq
+        start_flower
+        ;;
+    *)
+        help $0
+esac
