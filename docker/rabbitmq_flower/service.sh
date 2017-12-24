@@ -109,6 +109,12 @@ case "$1" in
         start_rabbitmq
         start_flower
         ;;
+    --build)
+        stop_containers
+        delete_flower
+        start_rabbitmq
+        start_flower
+        ;;
     *)
         help $0
 esac
