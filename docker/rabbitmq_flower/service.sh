@@ -94,6 +94,8 @@ delete_flower() {
 help() {
     echo "usage:\t[--start]\tstart RabbitMQ and Flower services"
     echo "$fakes\t[--stop]\tstop and delete containers"
+    echo "$fakes\t[--restart]\tstop, delete and start containers"
+    echo "$fakes\t[--build]\tstop and delete containers. Delete the flower image and start containers again"
 }
 
 case "$1" in
