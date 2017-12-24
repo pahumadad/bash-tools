@@ -87,6 +87,10 @@ stop_containers() {
     done
 }
 
+delete_flower() {
+    docker rmi $FLOWER_NAME
+}
+
 help() {
     echo "usage:\t[--start]\tstart RabbitMQ and Flower services"
     echo "$fakes\t[--stop]\tstop and delete containers"
