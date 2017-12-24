@@ -21,7 +21,7 @@ check() {
             fi
         done
     elif [ $NUM -eq 1 ]; then
-        IP=$ip
+        IP=$IPs
     fi
 
     echo $IP
