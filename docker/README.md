@@ -29,7 +29,7 @@ container options:
 
 DB options:
 	[--user_name]	set an user name. Default is 'admin'
-	[--iser_pass]	set an user pass. Default is 'admin'
+	[--user_pass]	set an user pass. Default is 'admin'
 	[--db_name]	set a DB name. Dafult is 'example_db'.
 			This name will be use as the Docker container name as well.
 ```

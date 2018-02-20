@@ -64,7 +64,7 @@ help() {
     echo -e "\t[--restart]\tto restart a PostgreSQL Docker container DB"
     echo -e "\nDB options:"
     echo -e "\t[--user_name]\tset an user name. Default is 'admin'"
-    echo -e "\t[--iser_pass]\tset an user pass. Default is 'admin'"
+    echo -e "\t[--user_pass]\tset an user pass. Default is 'admin'"
     echo -e "\t[--db_name]\tset a DB name. Dafult is 'example_db'."
     echo -e "\t\t\tThis name will be use as the Docker container name as well."
     exit 0
