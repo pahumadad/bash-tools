@@ -1,5 +1,21 @@
 #!/bin/bash
 
+rename_batch() {
+    input=$1
+    OLDIFS=$IFS
+    IFS=,
+    [ ! -f $input ] && { echo "$input file not found"; exit 99; }
+    while read old new
+    do
+        if [ $2 ]; then
+            rename "$old" "$new" "$2"
+        else
+            rename "$old" "$new"
+        fi
+    done < $input
+    IFS=$OLDIFS 
+}
+
 rename() {
     RED="\033[0;31m"
     NC="\033[0m"
@@ -10,8 +26,6 @@ rename() {
             if [ ! -z $3 ]; then
                 mv "$i" "$name"
             fi
-        else
-            list="$list$i~~~->~~~$name\n"
         fi
     done
 
@@ -27,11 +41,11 @@ help() {
 
 case "$1" in
     --simulate | -s)
-        rename "${2}" "${3}"
+        rename_batch "${2}"
         ;;
     --apply | -a)
         apply=true
-        rename "${2}" "${3}" $apply
+        rename_batch "${2}" $apply
         ;;
     *)
         help $0
