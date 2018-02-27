@@ -59,10 +59,15 @@ start_postgres() {
     if [ "$STATE" = "true" ]; then
         echo -e "> The Docker container is already running"
     elif [ -z $(bash docker_tools.sh -i $DB_DOCKER_IMG) ]; then
-        echo -e "\x1B[91mERROR: "
-        echo -e "\x1B[97mDocker image not found:" $DB_DOCKER_IMG
-        echo -e "\x1B[39m"
-        exit 1
+        docker pull $DB_DOCKER_IMG
+        if [ ! -z $(bash docker_tools.sh -i $DB_DOCKER_IMG) ]; then
+            start_postgres
+        else
+            echo -e "\x1B[91mERROR: "
+            echo -e "\x1B[97mDocker image not found:" $DB_DOCKER_IMG
+            echo -e "\x1B[39m"
+            exit 1
+        fi
     else
         echo -e "> Launching PostgreSQL DB"
 
@@ -80,7 +85,7 @@ start_postgres() {
 
 stop_postgres() {
     STATE=$(check_running $DB_NAME)
-    if [ -z "$STATE" ]; then
+    if [ "$STATE" = "true" ]; then
         docker rm -f $DB_NAME
     fi
 }
