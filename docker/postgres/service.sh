@@ -90,6 +90,11 @@ stop_postgres() {
     fi
 }
 
+create_dump() {
+    pg_dump --version
+    pg_dump -U $USER_NAME -h localhost $DB_NAME > "$DB_NAME.sql"
+}
+
 help() {
     echo -e "usage $0"
     echo -e "container options:"
@@ -98,6 +103,7 @@ help() {
     echo -e "\t\t\tthe new Docker DB image and this will be used to start the container"
     echo -e "\t[--stop]\tto stop a PostgreSQL Docker container DB"
     echo -e "\t[--restart]\tto restart a PostgreSQL Docker container DB"
+    echo -e "\t[-s --save]\tto create a DB dump. You need to specify the DB connection credentials"
     echo -e "\nDB options:"
     echo -e "\t[--user_name DB_USER_NAME]\tset an user name. Default is 'admin'"
     echo -e "\t[--user_pass DB_USER_PASS]\tset an user pass. Default is 'admin'"
@@ -154,6 +160,9 @@ case "$ARG" in
     --restart)
         stop_postgres
         start_postgres
+        ;;
+    --save | -s)
+        create_dump
         ;;
     *)
         help
