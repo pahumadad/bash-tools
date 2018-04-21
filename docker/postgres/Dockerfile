@@ -1,4 +1,5 @@
-FROM postgres:9.6
+FROM postgres
 
-ARG DUMP_FILE
-ADD ${DUMP_FILE} /docker-entrypoint-initdb.d/
+ARG DUMP
+ENV DUMP ${DUMP}
+ADD ${DUMP} /docker-entrypoint-initdb.d/
