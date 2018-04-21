@@ -91,8 +91,11 @@ stop_postgres() {
 }
 
 create_dump() {
-    pg_dump --version
-    pg_dump -U $USER_NAME -h localhost $DB_NAME > "$DB_NAME.sql"
+    if [ -z $DB_DUMP ]; then
+        DB_DUMP="$DB_NAME.sql"
+    fi
+
+    pg_dump -U $USER_NAME -h localhost $DB_NAME > $DB_DUMP
 }
 
 help() {
@@ -104,6 +107,7 @@ help() {
     echo -e "\t[--stop]\tto stop a PostgreSQL Docker container DB"
     echo -e "\t[--restart]\tto restart a PostgreSQL Docker container DB"
     echo -e "\t[-s --save]\tto create a DB dump. You need to specify the DB connection credentials"
+    echo -e "\t\t\tA path/to/the/file.sql could be specified with the --db_dump argument"
     echo -e "\nDB options:"
     echo -e "\t[--user_name DB_USER_NAME]\tset an user name. Default is 'admin'"
     echo -e "\t[--user_pass DB_USER_PASS]\tset an user pass. Default is 'admin'"
