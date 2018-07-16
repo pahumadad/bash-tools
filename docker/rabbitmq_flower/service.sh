@@ -5,13 +5,13 @@ FLOWER_NAME="flower"
 
 check_command() {
     if [ $1 -ne 0 ]; then
-        echo "\x1B[91mERROR: "
-        echo "\x1B[97mDocker run exit with code " $1
-        echo "\x1B[39m"
+        echo -e "\x1B[91mERROR: "
+        echo -e "\x1B[97mDocker run exit with code " $1
+        echo -e "\x1B[39m"
         exit 1
     else
-        echo "\x1B[97m> $2 [\x1B[32mOK\x1B[97m]"
-        echo "\x1B[39m"
+        echo -e "\x1B[97m> $2 [\x1B[32mOK\x1B[97m]"
+        echo -e "\x1B[39m"
     fi
 }
 
@@ -92,10 +92,10 @@ delete_flower() {
 }
 
 help() {
-    echo "usage:\t[--start]\tstart RabbitMQ and Flower services"
-    echo "$fakes\t[--stop]\tstop and delete containers"
-    echo "$fakes\t[--restart]\tstop, delete and start containers"
-    echo "$fakes\t[--build]\tstop and delete containers. Delete the flower image and start containers again"
+    echo -e "usage:\t[--start]\tstart RabbitMQ and Flower services"
+    echo -e "$fakes\t[--stop]\tstop and delete containers"
+    echo -e "$fakes\t[--restart]\tstop, delete and start containers"
+    echo -e "$fakes\t[--build]\tstop and delete containers. Delete the flower image and start containers again"
 }
 
 case "$1" in
