@@ -3,6 +3,7 @@
 USER_NAME="admin"
 USER_PASS="admin"
 DB_NAME="example_db"
+DB_PORT="5432"
 DB_DUMP=""
 DB_DOCKER_IMG="postgres"
 
@@ -72,7 +73,7 @@ start_postgres() {
         echo -e "> Launching PostgreSQL DB"
 
         docker run -d \
-            -p 5432:5432 \
+            -p $DB_PORT:5432 \
             -e POSTGRES_USER=$USER_NAME \
             -e POSTGRES_PASSWORD=$USER_PASS \
             -e POSTGRES_DB=$DB_NAME \
@@ -102,24 +103,25 @@ help() {
     echo -e "usage $0"
     echo -e "container options:"
     echo -e "\t[--start]\tto start a PostgreSQL Docker container DB"
-    echo -e "\t\t\tif a dump file y given with '--db_dump' argument there will be created"
+    echo -e "\t\t\tif a dump file y given with '--db-dump' argument there will be created"
     echo -e "\t\t\tthe new Docker DB image and this will be used to start the container"
-    echo -e "\t\t\toptionals: [--user_name, --user_pass, --db_name, --db_img, --db_dump]"
+    echo -e "\t\t\toptionals: [--user-name, --user-pass, --db-name, --db-port, --db-img, --db-dump]"
     echo -e "\t[--stop]\tto stop a PostgreSQL Docker container DB"
-    echo -e "\t\t\tneeds: [--db_name]"
+    echo -e "\t\t\tneeds: [--db-name]"
     echo -e "\t[--restart]\tto restart a PostgreSQL Docker container DB"
-    echo -e "\t\t\tneeds: [--db_name]"
+    echo -e "\t\t\tneeds: [--db-name]"
     echo -e "\t[-s --save]\tto create a DB dump. You need to specify the DB connection credentials"
-    echo -e "\t\t\ta path/to/the/file.sql could be specified with the --db_dump argument"
-    echo -e "\t\t\tneeds: [--user_name, --db_name], optionals: [--db_dump]"
+    echo -e "\t\t\ta path/to/the/file.sql could be specified with the --db-dump argument"
+    echo -e "\t\t\tneeds: [--user-name, --db-name], optionals: [--db-dump]"
     echo -e "\nDB options:"
-    echo -e "\t[--user_name DB_USER_NAME]\tset an user name. Default is 'admin'"
-    echo -e "\t[--user_pass DB_USER_PASS]\tset an user pass. Default is 'admin'"
-    echo -e "\t[--db_name DB_NAME]\t\tset a DB name. Dafult is 'example_db'"
+    echo -e "\t[--user-name DB_USER_NAME]\tset an user name. Default is 'admin'"
+    echo -e "\t[--user-pass DB_USER_PASS]\tset an user pass. Default is 'admin'"
+    echo -e "\t[--db-name DB_NAME]\t\tset a DB name. Dafult is 'example_db'"
     echo -e "\t\t\t\t\tthis name will be use as the Docker container name as well"
-    echo -e "\t[--db_img DB_IMG_NAME]\t\tuse a specific Docker PostgreSQL DB image"
+    echo -e "\t[--db-port DB_PORT]\t\tset the DB port. Dafult is '5432'"
+    echo -e "\t[--db-img DB_IMG_NAME]\t\tuse a specific Docker PostgreSQL DB image"
     echo -e "\t\t\t\t\tdefault is 'postgres' latest"
-    echo -e "\t[--db_dump PATH/TO/DUMP.SQL]\tuse a 'dump.sql' file to create a Docker"
+    echo -e "\t[--db-dump PATH/TO/DUMP.SQL]\tuse a 'dump.sql' file to create a Docker"
     echo -e "\t\t\t\t\tPostgreSQL DB image with this DB dump"
     echo -e "\t\t\t\t\tthe Docker image got will be called as the dump.sql file used."
     exit 0
@@ -129,23 +131,27 @@ ARG=""
 for (( i=1; i<=$#; i++)); do
     arg="${!i}"
     case "$arg" in
-        --user_name)
+        --user-name)
             i=$((i+1))
             USER_NAME="${!i}"
             ;;
-        --user_pass)
+        --user-pass)
             i=$((i+1))
             USER_PASS="${!i}"
             ;;
-        --db_name)
+        --db-name)
             i=$((i+1))
             DB_NAME="${!i}"
             ;;
-        --db_img)
+        --db-port)
+            i=$((i+1))
+            DB_PORT="${!i}"
+            ;;
+        --db-img)
             i=$((i+1))
             DB_DOCKER_IMG="${!i}"
             ;;
-        --db_dump)
+        --db-dump)
             i=$((i+1))
             DB_DUMP="${!i}"
             ;;
