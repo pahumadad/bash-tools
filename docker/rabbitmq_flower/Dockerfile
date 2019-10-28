@@ -1,8 +1,4 @@
-FROM ubuntu:17.10
-
-RUN apt-get update
-
-RUN apt-get install -y python python-pip
+FROM python:3.6-alpine3.7
 
 RUN pip install flower
 
