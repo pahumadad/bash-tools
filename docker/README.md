@@ -1,6 +1,29 @@
 docker scripts
 ==============
 
+## minio
+
+How to use it?
+
+```
+$ bash service.sh -h
+usage docker/minio/service.sh
+        [--start]       to start a Redis Docker container DB
+                        optionals: [--name, --port, --data, --access, --secret]
+        [--stop]        to stop a Redis Docker container DB
+                        needs: [--name]
+        [--restart]     to restart a Redis Docker container DB
+                        needs: [--name]
+container options:
+        [--name NAME]   set the container name. Dafult is 'minio'
+        [--port PORT]   set the minio port. Dafult is '9000'
+        [--data DATA]   set the data folder. Dafult is '/tmp/minio'
+        [--access KEY]  set the access key. Dafult is 'AKIAIOSFODNN7EXAMPLE'
+        [--secret KEY]  set the secret key. Dafult is 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+```
+
+
+
 postgres
 --------
 
